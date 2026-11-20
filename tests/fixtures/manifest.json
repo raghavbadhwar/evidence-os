@@ -1,0 +1,39 @@
+{
+  "fixtures": [
+    {
+      "filename": "adversarial.html",
+      "sha256": "ffe0401fccc66b3eceb02c7745a03a4e8b7302a612793c609acaa6132ffe459b",
+      "bytes": 509
+    },
+    {
+      "filename": "research-paper.pdf",
+      "sha256": "444673994328f7be8aee9d96fb240596b6f254f06ebaa53a2673413a244198c9",
+      "bytes": 1065095
+    },
+    {
+      "filename": "sample-notice.png",
+      "sha256": "17b17730ea0c0eaeafcf438809ffb510246de0d7274f6fe6f6c7ad4bc1e66739",
+      "bytes": 8090
+    },
+    {
+      "filename": "scanned-page.pdf",
+      "sha256": "d77431fc3af72f09431ce83c89a20c419e0d6359262135e7eba7d41d78759316",
+      "bytes": 219764
+    },
+    {
+      "filename": "structured-contract.docx",
+      "sha256": "70381049ddb9413d820fc06e195b4b32c3bce759002a69b8141c7d0dfe7c0ca1",
+      "bytes": 44338
+    },
+    {
+      "filename": "structured-deck.pptx",
+      "sha256": "e8a42ba1be3186d5ca8fee925b33711c211af1b5b10ac04318c1d44626f6e082",
+      "bytes": 39043
+    },
+    {
+      "filename": "structured-workbook.xlsx",
+      "sha256": "829595d68d52120c56c3c91d0c50164c8a022a6dc2039caf264faa6c4010e400",
+      "bytes": 13099
+    }
+  ]
+}

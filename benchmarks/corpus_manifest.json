@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "documents": [
+    {"id": "adversarial-html", "path": "tests/fixtures/adversarial.html", "slice": "html"},
+    {"id": "research-pdf", "path": "tests/fixtures/research-paper.pdf", "slice": "born_digital_pdf"},
+    {"id": "structured-docx", "path": "tests/fixtures/structured-contract.docx", "slice": "docx"},
+    {"id": "structured-xlsx", "path": "tests/fixtures/structured-workbook.xlsx", "slice": "xlsx"},
+    {"id": "structured-pptx", "path": "tests/fixtures/structured-deck.pptx", "slice": "pptx"}
+  ]
+}

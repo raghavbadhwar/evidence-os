@@ -1,0 +1,35 @@
+# Evidence OS for a commercial law firm
+
+## What the firm should receive
+
+A lawyer opens an authorized matter, asks a question in ordinary language, and gets a draft they can check against the originals. Another lawyer can see the governing term, what could overturn it, what is missing, and who approved any reusable conclusion. An agent using the CLI should have the same evidence, rights and review obligations as the person it represents. Termination and renewal are separate workflows. The field study is one source of evidence for release decisions.
+
+## Architecture and delivery criteria
+
+| Capability | Starting point in this checkout | What a firm should be able to demonstrate before accepting it |
+|---|---|---|
+| Organize messy matter files | Canonical originals, versioned passages, restricted file catalogue, intake and linking tools | Reconcile a permissioned export with the source register. Preserve email and attachment families, folder paths, aliases, drafts and signed versions. Account for every file as indexed, duplicate, unreadable or awaiting a decision. Surface ambiguous relations to the records owner. |
+| Find and inspect evidence | Exact lookup, original quotations, page locators, full-packet notice review and bounded retrieval | On unseen imports, compare exact search, lexical plus embedding search, reranking and PageIndex navigation. Measure time to open the correct original and recall of *every* decisive exception by packet size and file type. Preserve an explicit escalation for incomplete or oversized packets. |
+| Understand varied documents | Parsers, OCR options and original-file viewer | Test scans, tables, clause numbering, signature pages and cross-references against the original page image. A visual model may flag a signature or handwritten note for inspection. A lawyer decides its legal significance. |
+| Answer commercial questions | Termination-period discovery, approved notice rules, hypothetical notice and reviewed evidence of service | Qualify renewal independently on auto-renewal, opt-out notice windows, renewal terms and amended dates. Extend to obligations, consents and other rights with workflow-specific reference cases. Grade party, route, operative date, decisive citations, conditions and abstention for each workflow. |
+| Coordinate models and agents | Shared browser/API/CLI, optional second reader, hosted Codex Sol inference | Route routine retrieval, difficult interpretation and independent challenge to appropriate models. Give agents only authorized matter evidence. Measure incremental benefit, time and cost. Trace source IDs actually supplied to each role. Agreement can still be wrong. |
+| Learn from the firm | Matter-specific reviewed answers, open questions, reusable rules, source invalidation | Let staff propose filing aliases, vocabulary and search changes. Store who suggested and approved each change, its scope, test results and previous version. Replay on unseen matters before promotion. Demonstrate rollback and separation between firm conventions and privileged matter-specific facts. |
+| Make oversight practical | Desk and contract review viewer, grounding checks and reviewer decisions | An associate and supervisor independently complete a first review, a correction, a follow-up and a changed-file review without developer help. Each can identify provisional and approved material, inspect competing passages and recover from an error. |
+| Operate on firm infrastructure | Local fast search, PostgreSQL restore checks, scoped credentials, matter-scoped hosted Sol inference | IT installs on a clean supported host, integrates the firm's identity and chosen document source, verifies permission changes, tests backup and recovery, and can update or roll back a pinned release. Verify network egress, retention, telemetry and agent-client model endpoints in the actual environment. |
+
+## How the adaptive harness should work
+
+The firm's document system remains authoritative for originals and access rights. Evidence OS keeps versioned extracts, locators, relationships and review decisions. Each query starts with the requesting identity, matter, question, operative date and permitted source snapshot. The browser and agent CLI call the same service.
+
+The coordinator may select a search strategy, request a page-image check, split an entity or date ambiguity into separate questions, or ask a second reader to look for competing authority. Each assignment carries its evidence scope, question, time budget and required output. Save which passages each reader received and which it cited. The coordinator returns a checkable proposal or a specific unresolved question. A lawyer can inspect the originals, correct the result and approve reuse.
+
+Keep three kinds of memory distinct. Temporary reasoning belongs to the current task. A reviewed interpretation belongs to its matter, sources, parties, dates and route. A reusable firm convention, such as where signed side letters are usually filed, needs an owner, a version and an evaluation on other authorized matters. Applying a new convention should be reversible, and earlier outputs should remain attributable to the versions used at the time.
+
+## Delivery sequence
+
+1. **Establish custody and independent evaluation.** Engineering and the records owner freeze representative packets and permission boundaries. Independent lawyers define references and admissible uncertainty. Preserve held-out matters for release evaluation.
+2. **Qualify the evidence layer.** Connect the first firm-approved source, reconcile incremental changes and upstream deletions, and test exact identifiers alongside lexical and semantic retrieval. Choose the retrieval configuration using measured exception recall and latency. Track ingestion throughput and cold and warm search at representative concurrency.
+3. **Qualify interpretation and learning in parallel.** Run local and any approved hosted models on the same frozen tasks. Separate retrieval omission, incorrect application, unsupported citation, missing files and reviewer correction. Implement renewal and versioned firm vocabulary with their own acceptance cases. Compare the independent reader at similar answer coverage.
+4. **Prove the firm can own it.** Give the firm a versioned installation, runbook, permissions map, restore procedure and lawyer training packet. Run the clean-host exercise and timed lawyer study. The sponsor signs off each workflow against evidence, with a named records owner, supervising lawyer and technical operator.
+
+The release scorecard should report controlling-exception misses separately, lawyer time to a checkable answer including manual fallback, answer coverage, latency, model use, and recovery results. Set operational targets against the firm's measured corpus, hardware and usual workflow. Report the denominators and observed failures alongside any mean score. The [field protocol](real-file-study/protocol.md) contains the initial study thresholds and assignments.

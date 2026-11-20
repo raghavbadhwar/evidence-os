@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Evidence OS · Matter desk</title>
+    <style>
+      :root {
+        font:
+          17px/1.5 system-ui,
+          sans-serif;
+        color: #172e27;
+        background: #f7f8f3;
+      }
+      body {
+        max-width: 54rem;
+        margin: auto;
+        padding: 1rem;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        font-family: Georgia, serif;
+      }
+      h1 {
+        font-size: 2.5rem;
+      }
+      section,
+      details,
+      article {
+        padding: 1rem 0;
+        border-top: 1px solid #bac8bd;
+      }
+      input,
+      textarea,
+      button,
+      select {
+        font: inherit;
+        padding: 0.5rem;
+        border: 1px solid #87998b;
+        border-radius: 0.35rem;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      input[type="password"],
+      textarea {
+        display: block;
+        width: min(100%, 38rem);
+      }
+      label {
+        display: block;
+        margin: 0.5rem 0;
+      }
+      button {
+        background: #204c40;
+        color: white;
+        cursor: pointer;
+        margin: 0.35rem 0.4rem 0.35rem 0;
+      }
+      button:disabled {
+        opacity: 0.6;
+      }
+      a {
+        color: #194b3b;
+      }
+      blockquote {
+        margin: 0.5rem 0;
+        padding-left: 0.8rem;
+        border-left: 3px solid #92b7a2;
+        white-space: pre-wrap;
+      }
+      #status {
+        position: sticky;
+        bottom: 0;
+        background: #fff9dc;
+      }
+      #status:empty {
+        display: none;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible {
+        outline: 3px solid #bb680c;
+      }
+      small {
+        display: block;
+      }
+      [hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body data-practice="false">
+    <header>
+      <p>Evidence OS</p>
+      <h1>Matter desk</h1>
+    </header>
+    <form id="login">
+      <label>Your workspace access code<input id="token" type="password" required autocomplete="off" /></label
+      ><small id="loginHelp">Your firm's workspace administrator issues this code.</small><button>Open my matters</button>
+    </form>
+    <main hidden id="desk">
+      <label
+        >Matter
+        <select id="matter"></select></label
+      ><button id="logout">Close workspace</button>
+      <aside id="practiceGuide" hidden aria-labelledby="practiceTitle">
+        <h2 id="practiceTitle">Your first matter</h2>
+        <p id="practiceStep" aria-live="polite"></p>
+        <a id="practiceLink"></a>
+      </aside>
+      <section>
+        <h2>Ask about this matter</h2>
+        <form id="search">
+          <label
+            >What do you need to know?<textarea
+              id="question"
+              rows="2"
+              required
+              placeholder="What notice period applies to Subsidiary A?"
+            ></textarea>
+          </label>
+          <label>As of <input id="when" type="date" required /></label>
+          <label
+            >Look for
+            <select id="mode">
+              <option value="question">Reviewed answer or related passages</option>
+              <option value="reference">Exact reference in the text</option>
+              <option value="filename">Exact filename</option>
+            </select></label
+          ><button>Search this matter</button>
+        </form>
+        <div id="result" aria-live="polite"></div>
+      </section>
+      <details id="library">
+        <summary>Bring a file into this matter</summary>
+        <label
+          >File approved by the records owner
+          <select id="sources"></select
+        ></label>
+        <label id="replaceLabel" hidden
+          ><input id="replaceFile" type="checkbox" /> Replace the existing copy with the records owner’s
+          approved version</label
+        >
+        <button id="fetch">Fetch file</button>
+        <p id="libraryNote"></p>
+      </details>
+      <details open>
+        <summary>Open questions and saved answers</summary>
+        <div id="notes"></div>
+        <button id="more" hidden>Show more</button>
+      </details>
+      <p>
+        <a href="/">Open the contract review workspace</a> for termination scenarios, notice rules and
+        document uploads.
+      </p>
+    </main>
+    <p id="status" role="status"></p>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const practice = document.body.dataset.practice === "true";
+      const practiceQuestion = "How much written notice do Subsidiaries A and B need to terminate C-7 for convenience?";
+      if (practice) {
+        $("loginHelp").textContent = "Copy the Researcher code from the launch window to start the fictional Alder matter. Use the Reviewer code when you are ready to review.";
+        $("practiceGuide").hidden = false;
+      }
+      function practiceStep(text, link, target) {
+        $("practiceStep").textContent = text;
+        $("practiceLink").textContent = link;
+        $("practiceLink").href = "#" + target;
+      }
+      const labels = {
+        pending: "Awaiting independent review",
+        approved: "Reviewed answer",
+        open: "Open question",
+        resolved: "Question resolved",
+        rejected: "Declined",
+        withdrawn: "Withdrawn",
+      };
+      let token = "",
+        epoch = 0,
+        searchId = 0,
+        next = "",
+        canEdit = false,
+        canReview = false;
+      function node(parent, tag, text) {
+        let n = document.createElement(tag);
+        n.textContent = text;
+        parent.append(n);
+        return n;
+      }
+      function action(parent, label, fn) {
+        let b = node(parent, "button", label);
+        b.type = "button";
+        b.onclick = () => task(b, fn);
+        return b;
+      }
+      async function task(b, fn) {
+        let e = epoch;
+        b.disabled = true;
+        $("status").textContent = "";
+        try {
+          await fn();
+        } catch (err) {
+          if (epoch === e) $("status").textContent = err.message;
+        } finally {
+          b.disabled = false;
+        }
+      }
+      async function api(path, body) {
+        const r = await fetch("/v1/" + path, {
+          method: body ? "POST" : "GET",
+          headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        if (!r.ok) {
+          const d = (await r.json()).detail;
+          throw Error(typeof d === "string" ? d : "Check the required fields and try again.");
+        }
+        return r.json();
+      }
+      const base = () => "source-sets/" + $("matter").value + "/";
+      function clearAnswer() {
+        searchId++;
+        $("result").replaceChildren();
+      }
+      for (const id of ["question", "when", "mode"]) $(id).oninput = clearAnswer;
+      function reset() {
+        epoch++;
+        clearAnswer();
+        token = "";
+        $("token").value = "";
+        $("desk").hidden = true;
+        $("login").hidden = false;
+        for (const id of ["matter", "notes", "sources", "status", "libraryNote"]) $(id).replaceChildren();
+        $("question").value = "";
+      }
+      $("logout").onclick = reset;
+      $("login").onsubmit = async (ev) => {
+        ev.preventDefault();
+        await task(ev.submitter, async () => {
+          token = $("token").value;
+          const rows = await api("source-sets");
+          if (!rows.length)
+            throw Error("No matters are assigned to this access code. Contact your workspace administrator.");
+          $("matter").replaceChildren(...rows.map((r) => new Option(r.name, r.id)));
+          $("token").value = "";
+          $("desk").hidden = false;
+          $("login").hidden = true;
+          if (practice) {
+            $("question").value = practiceQuestion;
+            $("when").value = "2026-03-01";
+            $("mode").value = "question";
+          }
+          await load();
+        });
+      };
+      function cite(parent, p) {
+        const loc = p.locator;
+        node(
+          parent,
+          "strong",
+          p.filename +
+            " · " +
+            (loc.page
+              ? "Page " + loc.page
+              : loc.line_start
+                ? "Lines " + loc.line_start + "–" + loc.line_end
+                : JSON.stringify(loc)),
+        );
+        node(parent, "blockquote", p.text);
+      }
+      async function original(id, name, e) {
+        const r = await fetch("/v1/" + base() + "documents/" + id + "/original", {
+          headers: { Authorization: "Bearer " + token },
+        });
+        if (!r.ok) throw Error("This version is unavailable. Search again.");
+        const blob = await r.blob();
+        if (epoch !== e) return;
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      }
+      function selectSource() {
+        $("replaceFile").checked = false;
+        $("replaceLabel").hidden = !canEdit || !$("sources").selectedOptions[0]?.dataset.documentId;
+      }
+      $("sources").onchange = selectSource;
+      async function load() {
+        const e = ++epoch,
+          b = base();
+        clearAnswer();
+        $("notes").replaceChildren();
+        $("sources").replaceChildren();
+        $("more").hidden = true;
+        $("libraryNote").textContent = "";
+        $("fetch").disabled = true;
+        const [m, s] = await Promise.all([api(b.slice(0, -1)), api(b + "library")]);
+        if (e !== epoch) return;
+        canEdit = m.can_edit;
+        canReview = m.can_review;
+        const currentIds = new Map(m.documents.map((d) => [d.name, d.id]));
+        $("sources").replaceChildren(
+          ...s.map((name) => {
+            const option = new Option(name, name);
+            if (currentIds.has(name)) option.dataset.documentId = currentIds.get(name);
+            return option;
+          }),
+        );
+        if (practice && !currentIds.has("Side letter.txt")) {
+          $("library").open = true;
+          $("sources").value = "Side letter.txt";
+        }
+        selectSource();
+        $("fetch").disabled = !s.length || !canEdit;
+        $("libraryNote").textContent = s.length
+          ? ""
+          : "No files are available here yet. Ask the records owner to add the missing file.";
+        await notes(false);
+      }
+      $("matter").onchange = () => {
+        $("question").value = "";
+        load().catch((err) => ($("status").textContent = err.message));
+      };
+      $("when").valueAsDate = new Date();
+      $("fetch").onclick = () =>
+        task($("fetch"), async () => {
+          const e = epoch,
+            selected = $("sources").selectedOptions[0];
+          if (!selected || !canEdit) throw Error("Select an approved file in a matter you can edit.");
+          const job = await api(base() + "fetch", {
+            source: selected.value,
+            expected_current_id: $("replaceFile").checked ? selected.dataset.documentId : null,
+          });
+          clearAnswer();
+          for (let n = 0; n < 120 && epoch === e; n++) {
+            let j = await api("jobs/" + job.ingestion_job_id);
+            if (e !== epoch) return;
+            if (j.status === "ready") {
+              await load();
+              $("status").textContent = "File is ready. Search the matter again.";
+              return;
+            }
+            if (!["queued", "processing"].includes(j.status))
+              throw Error("File needs attention: " + j.detail);
+            $("status").textContent = "Reading the file…";
+            await new Promise((r) => setTimeout(r, 500));
+          }
+          if (epoch === e)
+            $("status").textContent =
+              "File is still being read. Check the document list in the contract review workspace.";
+        });
+      $("search").onsubmit = (ev) => {
+        ev.preventDefault();
+        task(ev.submitter, async () => {
+          const e = epoch,
+            b = base(),
+            seq = ++searchId;
+          const q = { question: $("question").value.trim(), as_of: $("when").value },
+            mode = $("mode").value;
+          const v = await api(b + "search", { ...q, mode });
+          if (epoch !== e || seq !== searchId) return;
+          let r = $("result");
+          r.replaceChildren();
+          node(
+            r,
+            "h3",
+            {
+              reviewed: "Reviewed answer",
+              unresolved: "No match found",
+              passages_only: "Passages to check",
+              file_found: "Matching file",
+            }[v.status],
+          );
+          for (const [name, reason] of Object.entries(v.required_file_gaps || {}))
+            node(
+              r,
+              "p",
+              "Required file: " +
+                name +
+                " (" +
+                reason +
+                "). Fetch the approved version or ask the records owner for help.",
+            );
+          if (v.incomplete && !Object.keys(v.required_file_gaps || {}).length)
+            node(
+              r,
+              "p",
+              "Some files or matches could not be checked. Ask the records owner to reconcile the file list.",
+            );
+          if (v.answer) {
+            node(r, "p", v.answer);
+            node(
+              r,
+              "small",
+              "This saved answer applies to the selected date and current files. Actual service requires a separately reviewed receipt.",
+            );
+          } else if (mode === "question")
+            node(r, "p", "There is no current reviewed answer to this question for the selected date.");
+          for (const d of v.documents) action(r, "Open " + d.name, () => original(d.id, d.name, e));
+          let picks = [];
+          for (const p of v.evidence) {
+            let item = node(r, "article", "");
+            cite(item, p);
+            action(item, "Open original", () => original(p.document_id, p.filename, e));
+            if (canEdit && mode === "question" && !v.answer) {
+              let l = node(item, "label", "");
+              let c = document.createElement("input");
+              c.type = "checkbox";
+              c.value = p.id;
+              l.append(c, " Use this passage");
+              picks.push(c);
+            }
+          }
+          if (!canEdit || mode !== "question" || v.answer) return;
+          action(r, "Save as an open question", async () => {
+            await api(b + "gaps", q);
+            if (epoch === e) {
+              await notes(false);
+              $("status").textContent = "Question saved for follow-up.";
+            }
+          });
+          if (picks.length) {
+            let l = node(r, "label", "Your proposed answer");
+            let a = node(l, "textarea", "");
+            action(r, "Send answer for review", async () => {
+              let ids = picks.filter((x) => x.checked).map((x) => x.value);
+              if (!a.value.trim() || !ids.length)
+                throw Error("Write an answer and select its supporting passages.");
+              await api(b + "knowledge", {
+                ...q,
+                answer: a.value.trim(),
+                snapshot: v.snapshot,
+                evidence_ids: ids,
+              });
+              if (epoch === e) {
+                await notes(false);
+                $("status").textContent = "Sent to a different reviewer.";
+              }
+            });
+          }
+        });
+      };
+      let listRequest = 0;
+      async function notes(more) {
+        const e = epoch,
+          b = base(),
+          seq = ++listRequest;
+        const v = await api(b + "knowledge" + (more ? "?after=" + encodeURIComponent(next) : ""));
+        if (epoch !== e || seq !== listRequest) return;
+        if (!more) $("notes").replaceChildren();
+        if (practice && !more) {
+          const related = v.entries.filter((r) => r.current && r.question === practiceQuestion && r.as_of === "2026-03-01");
+          if (related.some((r) => r.status === "approved"))
+            practiceStep("Review complete. Search the same question and date to see the approved answer and its citations.", "Go to the question", "question");
+          else if (related.some((r) => r.status === "pending"))
+            practiceStep(canReview
+              ? "Open the pending answer below. Read its supporting passages and record your reason before deciding."
+              : "Your answer is waiting for review. Choose Close workspace, then sign in with the Reviewer code from the launch window.",
+              canReview ? "Go to saved answers" : "Go to Close workspace", canReview ? "notes" : "logout");
+          else if ($("sources").querySelector('option[value="Side letter.txt"]')?.dataset.documentId)
+            practiceStep("Search the prefilled question. Open the amendment and side letter, select the supporting passages, then write and send your answer. State what the file shows about service.", "Go to the question", "question");
+          else
+            practiceStep("The agreement and amendment are on the desk. Fetch the signed side letter from the approved files before answering.", "Go to Fetch file", "fetch");
+        }
+        next = v.next_after;
+        $("more").hidden = !next;
+        if (!v.entries.length && !more) node($("notes"), "p", "No questions or answers saved yet.");
+        for (const row of v.entries) {
+          let d = node($("notes"), "details", "");
+          node(
+            d,
+            "summary",
+            row.question +
+              " · " +
+              (row.current || row.status === "open"
+                ? labels[row.status]
+                : "Matter changed · " + labels[row.status]),
+          );
+          node(d, "small", "As of " + row.as_of);
+          if (row.answer) node(d, "p", row.answer);
+          if (row.reason) node(d, "p", "Review note: " + row.reason);
+          if (row.status === "open")
+            action(d, "Search this question", () => {
+              $("question").value = row.question;
+              $("when").value = row.as_of;
+              $("mode").value = "question";
+              $("search").requestSubmit($("search").querySelector("button"));
+            });
+          if (row.current && row.evidence_ids.length) {
+            let checked = false,
+              proof = node(d, "div", "");
+            action(d, "Read supporting passages", async () => {
+              const ps = await Promise.all(row.evidence_ids.map((id) => api("evidence/" + id)));
+              if (e !== epoch) return;
+              proof.replaceChildren();
+              for (const p of ps) cite(proof, p);
+              checked = true;
+            });
+            if (canReview && ["pending", "approved"].includes(row.status)) {
+              let l = node(d, "label", "Reason for your decision");
+              let why = node(l, "textarea", "");
+              for (const choice of row.status === "pending" ? ["approve", "reject"] : ["withdraw"])
+                action(
+                  d,
+                  { approve: "Approve answer", reject: "Decline answer", withdraw: "Withdraw answer" }[
+                    choice
+                  ],
+                  async () => {
+                    if (choice === "approve" && !checked)
+                      throw Error("Read the supporting passages before approving.");
+                    if (!why.value.trim()) throw Error("Record the reason for your decision.");
+                    await api(b + "knowledge/" + row.id + "/review", { decision: choice, reason: why.value });
+                    if (epoch === e) {
+                      clearAnswer();
+                      await notes(false);
+                      $("status").textContent = "Review decision saved.";
+                    }
+                  },
+                );
+            }
+          }
+        }
+      }
+      $("more").onclick = () => task($("more"), () => notes(true));
+    </script>
+  </body>
+</html>

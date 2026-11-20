@@ -1,0 +1,46 @@
+.DS_Store
+
+# Secrets and local runtime configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python environments and caches
+.venv
+**/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Build and package outputs
+build/
+dist/
+*.egg-info/
+
+# Runtime data and databases
+artifacts/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# Local experiments, vendored checkouts, and generated document material
+work/
+outputs/*
+!outputs/pageindex_first_builder.py
+!outputs/universal_pageindex_ingest.py
+!outputs/pageindex_first_usage.md
+
+
+# Local Evidence OS credentials, sources and catalogue
+.evidence/
+.evidence-tools/
+.evidence-practice-venv/
+.evidence-practice-venv.backup-*/
+.evidence-practice.lock

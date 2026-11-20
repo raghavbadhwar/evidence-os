@@ -1,0 +1,94 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "document_id": {
+      "format": "uuid",
+      "title": "Document Id",
+      "type": "string"
+    },
+    "end_block_id": {
+      "format": "uuid",
+      "title": "End Block Id",
+      "type": "string"
+    },
+    "kind": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Kind",
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "method": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Method",
+      "type": "string"
+    },
+    "node_id": {
+      "format": "uuid",
+      "title": "Node Id",
+      "type": "string"
+    },
+    "ordinal": {
+      "minimum": 0,
+      "title": "Ordinal",
+      "type": "integer"
+    },
+    "parent_node_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Node Id"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "start_block_id": {
+      "format": "uuid",
+      "title": "Start Block Id",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "verified": {
+      "default": false,
+      "title": "Verified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "document_id",
+    "title",
+    "kind",
+    "ordinal",
+    "start_block_id",
+    "end_block_id",
+    "method",
+    "confidence"
+  ],
+  "title": "StructureNode",
+  "type": "object"
+}

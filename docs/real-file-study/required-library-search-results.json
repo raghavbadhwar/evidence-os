@@ -1,0 +1,27 @@
+{
+  "documents": 1000,
+  "required_files": 1000,
+  "passages_per_document": 1,
+  "warm_queries_per_mode": 50,
+  "transport": "in-process HTTP TestClient",
+  "results": {
+    "filename": {
+      "first_ms": 15.08,
+      "warm_p50_ms": 5.83,
+      "warm_p95_ms": 11.8,
+      "correct_first_hits": 51
+    },
+    "reference": {
+      "first_ms": 6.5,
+      "warm_p50_ms": 6.42,
+      "warm_p95_ms": 12.53,
+      "correct_first_hits": 51
+    },
+    "question": {
+      "first_ms": 8.08,
+      "warm_p50_ms": 8.22,
+      "warm_p95_ms": 14.84,
+      "correct_first_hits": 51
+    }
+  }
+}

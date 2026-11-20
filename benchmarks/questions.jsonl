@@ -1,0 +1,6 @@
+{"id":"html-invoice-due","document_id":"adversarial-html","query":"When are invoices due?","expected_texts":["Invoices are due before the fifth day of each month."]}
+{"id":"html-currency","document_id":"adversarial-html","query":"What currency is used for billing?","expected_texts":["Currency\tINR"]}
+{"id":"pdf-ablation","document_id":"research-pdf","query":"ablation study","expected_texts":["Ablation Study"]}
+{"id":"docx-termination","document_id":"structured-docx","query":"termination","expected_texts":["Termination"]}
+{"id":"xlsx-budget","document_id":"structured-xlsx","query":"budget 35000","expected_texts":["B5=35000"]}
+{"id":"pptx-reliability","document_id":"structured-pptx","query":"Reliability Gates","expected_texts":["Reliability Gates"]}

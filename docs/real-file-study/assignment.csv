@@ -1,0 +1,13 @@
+session_order,matter_slot,stratum,product_reader,usual_reader,longitudinal
+1,1,exception,L1,L2,yes
+1,9,clean,L3,L4,no
+2,2,exception,L2,L3,no
+2,11,indeterminate,L4,L1,no
+3,3,exception,L3,L1,yes
+3,4,exception,L2,L4,yes
+4,5,exception,L4,L3,yes
+4,6,exception,L1,L2,no
+5,10,clean,L2,L1,no
+5,7,exception,L3,L4,no
+6,12,indeterminate,L1,L3,no
+6,8,exception,L4,L2,no

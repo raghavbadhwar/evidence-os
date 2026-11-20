@@ -1,0 +1,313 @@
+{
+  "split": "development",
+  "revision": 1,
+  "scores": {
+    "fields": {
+      "correct_link": 6,
+      "miss": 2,
+      "correct_abstention": 3,
+      "wrong_link": 1
+    },
+    "fields+model": {
+      "correct_link": 8,
+      "correct_abstention": 3,
+      "wrong_link": 1
+    },
+    "id": {
+      "correct_link": 3,
+      "miss": 5,
+      "correct_abstention": 3,
+      "wrong_link": 1
+    }
+  },
+  "rows": [
+    {
+      "case": "id only",
+      "method": "id",
+      "predicted": "MSA-407",
+      "expected": "MSA-407",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "id only",
+      "method": "fields",
+      "predicted": "MSA-407",
+      "expected": "MSA-407",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "id only",
+      "method": "fields+model",
+      "predicted": "MSA-407",
+      "expected": "MSA-407",
+      "outcome": "correct_link",
+      "model_ms": 271.8
+    },
+    {
+      "case": "id prefix collision",
+      "method": "id",
+      "predicted": "MSA-4070",
+      "expected": "MSA-4070",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "id prefix collision",
+      "method": "fields",
+      "predicted": "MSA-4070",
+      "expected": "MSA-4070",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "id prefix collision",
+      "method": "fields+model",
+      "predicted": "MSA-4070",
+      "expected": "MSA-4070",
+      "outcome": "correct_link",
+      "model_ms": 78.6
+    },
+    {
+      "case": "typographic dash",
+      "method": "id",
+      "predicted": "LIC-209",
+      "expected": "LIC-209",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "typographic dash",
+      "method": "fields",
+      "predicted": "LIC-209",
+      "expected": "LIC-209",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "typographic dash",
+      "method": "fields+model",
+      "predicted": "LIC-209",
+      "expected": "LIC-209",
+      "outcome": "correct_link",
+      "model_ms": 55.1
+    },
+    {
+      "case": "date names and title",
+      "method": "id",
+      "predicted": null,
+      "expected": "MSA-407",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "date names and title",
+      "method": "fields",
+      "predicted": "MSA-407",
+      "expected": "MSA-407",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "date names and title",
+      "method": "fields+model",
+      "predicted": "MSA-407",
+      "expected": "MSA-407",
+      "outcome": "correct_link",
+      "model_ms": 58.7
+    },
+    {
+      "case": "later same title",
+      "method": "id",
+      "predicted": null,
+      "expected": "MSA-4070",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "later same title",
+      "method": "fields",
+      "predicted": null,
+      "expected": "MSA-4070",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "later same title",
+      "method": "fields+model",
+      "predicted": "MSA-4070",
+      "expected": "MSA-4070",
+      "outcome": "correct_link",
+      "model_ms": 57.7
+    },
+    {
+      "case": "entities only ambiguous",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "entities only ambiguous",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "entities only ambiguous",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 56.3
+    },
+    {
+      "case": "shared parent different subsidiary",
+      "method": "id",
+      "predicted": null,
+      "expected": "SUP-816",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "shared parent different subsidiary",
+      "method": "fields",
+      "predicted": "SUP-816",
+      "expected": "SUP-816",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "shared parent different subsidiary",
+      "method": "fields+model",
+      "predicted": "SUP-816",
+      "expected": "SUP-816",
+      "outcome": "correct_link",
+      "model_ms": 58.9
+    },
+    {
+      "case": "informal names",
+      "method": "id",
+      "predicted": null,
+      "expected": "OPS-115",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "informal names",
+      "method": "fields",
+      "predicted": null,
+      "expected": "OPS-115",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "informal names",
+      "method": "fields+model",
+      "predicted": "OPS-115",
+      "expected": "OPS-115",
+      "outcome": "correct_link",
+      "model_ms": 60.5
+    },
+    {
+      "case": "multiple IDs",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "multiple IDs",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "multiple IDs",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 56.5
+    },
+    {
+      "case": "unseen id",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "unseen id",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "unseen id",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 56.1
+    },
+    {
+      "case": "same date distinct route",
+      "method": "id",
+      "predicted": null,
+      "expected": "LIC-209",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "same date distinct route",
+      "method": "fields",
+      "predicted": "LIC-209",
+      "expected": "LIC-209",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "same date distinct route",
+      "method": "fields+model",
+      "predicted": "LIC-209",
+      "expected": "LIC-209",
+      "outcome": "correct_link",
+      "model_ms": 55.6
+    },
+    {
+      "case": "incidental id",
+      "method": "id",
+      "predicted": "MSA-407",
+      "expected": null,
+      "outcome": "wrong_link",
+      "model_ms": null
+    },
+    {
+      "case": "incidental id",
+      "method": "fields",
+      "predicted": "MSA-407",
+      "expected": null,
+      "outcome": "wrong_link",
+      "model_ms": null
+    },
+    {
+      "case": "incidental id",
+      "method": "fields+model",
+      "predicted": "MSA-407",
+      "expected": null,
+      "outcome": "wrong_link",
+      "model_ms": 61.0
+    }
+  ]
+}

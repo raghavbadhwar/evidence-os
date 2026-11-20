@@ -1,0 +1,65 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "indexes_persisted": {
+      "default": false,
+      "title": "Indexes Persisted",
+      "type": "boolean"
+    },
+    "language_coverage": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Language Coverage",
+      "type": "number"
+    },
+    "locator_coverage": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Locator Coverage",
+      "type": "number"
+    },
+    "nonempty_block_count": {
+      "minimum": 0,
+      "title": "Nonempty Block Count",
+      "type": "integer"
+    },
+    "page_coverage": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Page Coverage",
+      "type": "number"
+    },
+    "queryable": {
+      "default": false,
+      "title": "Queryable",
+      "type": "boolean"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "structure_validity": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Structure Validity",
+      "type": "number"
+    }
+  },
+  "required": [
+    "page_coverage",
+    "nonempty_block_count",
+    "locator_coverage",
+    "language_coverage",
+    "structure_validity"
+  ],
+  "title": "QualityReport",
+  "type": "object"
+}

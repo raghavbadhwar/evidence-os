@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "byte_size": {
+      "minimum": 0,
+      "title": "Byte Size",
+      "type": "integer"
+    },
+    "detected_mime": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Detected Mime",
+      "type": "string"
+    },
+    "document_id": {
+      "format": "uuid",
+      "title": "Document Id",
+      "type": "string"
+    },
+    "original_filename": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "title": "Original Filename",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Source Sha256",
+      "type": "string"
+    },
+    "tenant_id": {
+      "format": "uuid",
+      "title": "Tenant Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tenant_id",
+    "source_sha256",
+    "byte_size",
+    "detected_mime",
+    "original_filename"
+  ],
+  "title": "SourceIdentity",
+  "type": "object"
+}

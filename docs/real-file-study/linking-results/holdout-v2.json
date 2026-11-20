@@ -1,0 +1,309 @@
+{
+  "split": "holdout",
+  "revision": 2,
+  "scores": {
+    "fields": {
+      "correct_abstention": 7,
+      "correct_link": 5
+    },
+    "fields+model": {
+      "correct_abstention": 7,
+      "correct_link": 5
+    },
+    "id": {
+      "correct_abstention": 7,
+      "correct_link": 2,
+      "miss": 3
+    }
+  },
+  "rows": [
+    {
+      "case": "section number not id",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "section number not id",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "section number not id",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 153.4
+    },
+    {
+      "case": "format variation",
+      "method": "id",
+      "predicted": "OPS-115",
+      "expected": "OPS-115",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "format variation",
+      "method": "fields",
+      "predicted": "OPS-115",
+      "expected": "OPS-115",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "format variation",
+      "method": "fields+model",
+      "predicted": "OPS-115",
+      "expected": "OPS-115",
+      "outcome": "correct_link",
+      "model_ms": 75.2
+    },
+    {
+      "case": "date only",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "date only",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "date only",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 62.4
+    },
+    {
+      "case": "missing identifier but unique entities and date",
+      "method": "id",
+      "predicted": null,
+      "expected": "NDA-22",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "missing identifier but unique entities and date",
+      "method": "fields",
+      "predicted": "NDA-22",
+      "expected": "NDA-22",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "missing identifier but unique entities and date",
+      "method": "fields+model",
+      "predicted": "NDA-22",
+      "expected": "NDA-22",
+      "outcome": "correct_link",
+      "model_ms": 58.5
+    },
+    {
+      "case": "competitive quote",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "competitive quote",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "competitive quote",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 54.7
+    },
+    {
+      "case": "truncated OCR",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "truncated OCR",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "truncated OCR",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 53.3
+    },
+    {
+      "case": "colliding title",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "colliding title",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "colliding title",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 56.4
+    },
+    {
+      "case": "short party names",
+      "method": "id",
+      "predicted": null,
+      "expected": "SUP-815",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "short party names",
+      "method": "fields",
+      "predicted": "SUP-815",
+      "expected": "SUP-815",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "short party names",
+      "method": "fields+model",
+      "predicted": "SUP-815",
+      "expected": "SUP-815",
+      "outcome": "correct_link",
+      "model_ms": 54.6
+    },
+    {
+      "case": "title-free secondary agreement",
+      "method": "id",
+      "predicted": null,
+      "expected": "NDA-22",
+      "outcome": "miss",
+      "model_ms": null
+    },
+    {
+      "case": "title-free secondary agreement",
+      "method": "fields",
+      "predicted": "NDA-22",
+      "expected": "NDA-22",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "title-free secondary agreement",
+      "method": "fields+model",
+      "predicted": "NDA-22",
+      "expected": "NDA-22",
+      "outcome": "correct_link",
+      "model_ms": 55.5
+    },
+    {
+      "case": "adjacent unknown id",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "adjacent unknown id",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "adjacent unknown id",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 55.6
+    },
+    {
+      "case": "multi family title",
+      "method": "id",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "multi family title",
+      "method": "fields",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": null
+    },
+    {
+      "case": "multi family title",
+      "method": "fields+model",
+      "predicted": null,
+      "expected": null,
+      "outcome": "correct_abstention",
+      "model_ms": 60.2
+    },
+    {
+      "case": "id only original",
+      "method": "id",
+      "predicted": "NDA-22",
+      "expected": "NDA-22",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "id only original",
+      "method": "fields",
+      "predicted": "NDA-22",
+      "expected": "NDA-22",
+      "outcome": "correct_link",
+      "model_ms": null
+    },
+    {
+      "case": "id only original",
+      "method": "fields+model",
+      "predicted": "NDA-22",
+      "expected": "NDA-22",
+      "outcome": "correct_link",
+      "model_ms": 54.6
+    }
+  ]
+}

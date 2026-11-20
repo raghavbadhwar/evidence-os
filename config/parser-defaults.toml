@@ -1,0 +1,54 @@
+schema_version = "1.0"
+extractor_version = "0.1.0"
+
+[limits]
+max_file_bytes = 524288000
+max_pages = 5000
+max_image_pixels = 100000000
+max_spreadsheet_rows = 1000000
+max_archive_entries = 10000
+max_uncompressed_bytes = 2147483648
+parser_timeout_seconds = 300
+max_parser_output_bytes = 1073741824
+
+[quality]
+minimum_page_coverage = 0.995
+minimum_native_chars_per_page = 80
+minimum_native_printable_ratio = 0.85
+minimum_ocr_confidence = 0.70
+minimum_structure_confidence = 0.60
+required_locator_coverage = 1.0
+maximum_unicode_replacement_ratio = 0.001
+maximum_duplicate_glyph_ratio = 0.05
+
+[quality.profiles.born_digital_pdf]
+minimum_page_coverage = 0.995
+minimum_ocr_confidence = 0.70
+
+[quality.profiles.mixed_pdf]
+minimum_page_coverage = 0.995
+minimum_ocr_confidence = 0.70
+
+[quality.profiles.image_only_pdf]
+minimum_page_coverage = 0.995
+minimum_ocr_confidence = 0.70
+
+[quality.profiles.image]
+minimum_page_coverage = 1.0
+minimum_ocr_confidence = 0.70
+
+[quality.profiles.office]
+minimum_page_coverage = 1.0
+minimum_ocr_confidence = 0.70
+
+[quality.profiles.text]
+minimum_page_coverage = 1.0
+minimum_ocr_confidence = 0.70
+
+[retrieval]
+fused_candidate_limit = 50
+reranker_candidate_limit = 20
+answer_context_block_limit = 8
+tree_range_block_limit = 64
+semantic_fallback_threshold = 0.55
+exact_reference_threshold = 0.95

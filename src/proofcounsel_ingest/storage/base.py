@@ -1,0 +1,16 @@
+from __future__ import annotations
+
+from typing import Protocol
+
+
+class StoragePort(Protocol):
+    def put_bytes(self, key: str, payload: bytes) -> None: ...
+
+    def get_bytes(self, key: str) -> bytes: ...
+
+    def exists(self, key: str) -> bool: ...
+
+    def delete(self, key: str) -> None: ...
+
+    def list_keys(self, prefix: str = "") -> list[str]: ...
+

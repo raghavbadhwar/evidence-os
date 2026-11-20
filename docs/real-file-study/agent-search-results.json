@@ -1,0 +1,26 @@
+{
+  "documents": 1000,
+  "passages_per_document": 1,
+  "warm_queries_per_mode": 50,
+  "transport": "in-process HTTP TestClient",
+  "results": {
+    "filename": {
+      "first_ms": 3.01,
+      "warm_p50_ms": 1.51,
+      "warm_p95_ms": 1.75,
+      "correct_first_hits": 51
+    },
+    "reference": {
+      "first_ms": 2.2,
+      "warm_p50_ms": 2.03,
+      "warm_p95_ms": 2.59,
+      "correct_first_hits": 51
+    },
+    "question": {
+      "first_ms": 4.12,
+      "warm_p50_ms": 4.06,
+      "warm_p95_ms": 5.05,
+      "correct_first_hits": 51
+    }
+  }
+}

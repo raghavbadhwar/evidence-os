@@ -1,0 +1,218 @@
+{
+  "scope": "synthetic, indexed matters, in-process HTTP; first and repeated requests",
+  "hosted_calls": 0,
+  "hosted_spend_this_run": 0,
+  "estimated_live_cost": null,
+  "scores": {
+    "retrieved_all_decisive": {
+      "count": 1,
+      "total": 2
+    },
+    "correct_supported": {
+      "count": 2,
+      "total": 2
+    },
+    "correct_abstention": {
+      "count": 4,
+      "total": 4
+    },
+    "unexpected_release": {
+      "count": 0,
+      "total": 8
+    }
+  },
+  "timings": {
+    "find/first": {
+      "n": 1,
+      "p50_ms": 5.021,
+      "p95_ms": 5.021
+    },
+    "find/repeat": {
+      "n": 1,
+      "p50_ms": 2.21,
+      "p95_ms": 2.21
+    },
+    "locate/first": {
+      "n": 1,
+      "p50_ms": 3.479,
+      "p95_ms": 3.479
+    },
+    "locate/repeat": {
+      "n": 1,
+      "p50_ms": 1.931,
+      "p95_ms": 1.931
+    },
+    "notice/first": {
+      "n": 6,
+      "p50_ms": 3.292,
+      "p95_ms": 3.597
+    },
+    "notice/repeat": {
+      "n": 6,
+      "p50_ms": 3.248,
+      "p95_ms": 4.35
+    }
+  },
+  "cases": [
+    {
+      "case": "lexical wording mismatch",
+      "route": "find",
+      "pass": "first",
+      "ms": 5.021,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "retrieved_all_decisive": false,
+      "unexpected_release": false
+    },
+    {
+      "case": "lexical wording mismatch",
+      "route": "find",
+      "pass": "repeat",
+      "ms": 2.21,
+      "cache_hit": true,
+      "scripted_calls": 0,
+      "retrieved_all_decisive": false,
+      "unexpected_release": false
+    },
+    {
+      "case": "protected amendment",
+      "route": "locate",
+      "pass": "first",
+      "ms": 3.479,
+      "cache_hit": false,
+      "scripted_calls": 1,
+      "retrieved_all_decisive": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "protected amendment",
+      "route": "locate",
+      "pass": "repeat",
+      "ms": 1.931,
+      "cache_hit": true,
+      "scripted_calls": 0,
+      "retrieved_all_decisive": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "effective first day",
+      "route": "notice",
+      "pass": "first",
+      "ms": 3.242,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_supported": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "effective first day",
+      "route": "notice",
+      "pass": "repeat",
+      "ms": 1.835,
+      "cache_hit": true,
+      "scripted_calls": 0,
+      "correct_supported": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "minimum met",
+      "route": "notice",
+      "pass": "first",
+      "ms": 3.343,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_supported": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "minimum met",
+      "route": "notice",
+      "pass": "repeat",
+      "ms": 1.881,
+      "cache_hit": true,
+      "scripted_calls": 0,
+      "correct_supported": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "unresolved exception",
+      "route": "notice",
+      "pass": "first",
+      "ms": 3.597,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "unresolved exception",
+      "route": "notice",
+      "pass": "repeat",
+      "ms": 3.041,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "before effective date",
+      "route": "notice",
+      "pass": "first",
+      "ms": 3.066,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "before effective date",
+      "route": "notice",
+      "pass": "repeat",
+      "ms": 3.499,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "missing service receipt",
+      "route": "notice",
+      "pass": "first",
+      "ms": 3.238,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "missing service receipt",
+      "route": "notice",
+      "pass": "repeat",
+      "ms": 3.456,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "overlapping rules",
+      "route": "notice",
+      "pass": "first",
+      "ms": 3.369,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    },
+    {
+      "case": "overlapping rules",
+      "route": "notice",
+      "pass": "repeat",
+      "ms": 4.35,
+      "cache_hit": false,
+      "scripted_calls": 0,
+      "correct_abstention": true,
+      "unexpected_release": false
+    }
+  ]
+}

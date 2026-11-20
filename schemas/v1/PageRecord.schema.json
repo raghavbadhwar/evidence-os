@@ -1,0 +1,79 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "document_id": {
+      "format": "uuid",
+      "title": "Document Id",
+      "type": "string"
+    },
+    "image_artifact_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Image Artifact Id"
+    },
+    "native_text_coverage": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Native Text Coverage",
+      "type": "number"
+    },
+    "ocr_confidence": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Ocr Confidence"
+    },
+    "ocr_used": {
+      "default": false,
+      "title": "Ocr Used",
+      "type": "boolean"
+    },
+    "page_number": {
+      "minimum": 1,
+      "title": "Page Number",
+      "type": "integer"
+    },
+    "quality_metrics": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Quality Metrics",
+      "type": "object"
+    },
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "document_id",
+    "page_number",
+    "native_text_coverage"
+  ],
+  "title": "PageRecord",
+  "type": "object"
+}

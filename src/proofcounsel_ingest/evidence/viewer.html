@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence OS · Matter workspace</title>
+<style>
+:root{font:16px/1.5 Inter,system-ui,sans-serif;color:#192e2b;background:#f7f7f1}*{box-sizing:border-box}
+body{max-width:970px;margin:auto;padding:32px 20px}h1{font:42px Georgia,serif;margin:0}h2{font:26px Georgia,serif;margin:8px 0}
+header,section,article{padding:18px 0;border-bottom:1px solid #c7d4ca}label{display:block;margin-top:10px}
+input,select,textarea,button{font:inherit;border:1px solid #afbab0;border-radius:5px;padding:7px;background:white;max-width:100%}
+input[type=password],textarea{width:min(100%,650px)}button{cursor:pointer;background:#204a43;color:white;margin:4px}
+small{color:#445b51}a{color:#204a43}fieldset{margin:12px 0;border:1px solid #c7d4ca}article:target{background:#e1ebe4}pre{white-space:pre-wrap;overflow-wrap:anywhere}#message{color:#713725}
+</style><header><h1>Evidence OS</h1><small>Matter workspace</small><p><a href="/desk">Open the matter desk to find a file, ask a question or review a saved answer</a></p></header>
+<section><label for="token">Access token</label><input type="password" id="token" autocomplete="off"><button id="connect">Open workspace</button></section>
+<section hidden id="workspace"><h2>Source sets</h2><select id="matters" aria-label="Source set"></select>
+<input id="name" placeholder="New source set" aria-label="New source set name"><label><input type="checkbox" id="hosted"> Allow hosted Codex Sol to receive evidence for this source set</label><button id="create">Create</button>
+<h2>Documents</h2><div id="docs"></div><label>File <input id="file" type="file"></label>
+<label>Document name in this matter <input id="upload-name" maxlength="160"></label>
+<label><input type="checkbox" id="replace"> Replace the current version of this named document</label>
+<label>Source role <select id="role"><option>agreement</option><option>amendment</option><option>schedule</option><option>definition</option><option>receipt</option><option>other</option></select></label><button id="upload">Add document</button>
+<h2>Ask the sources</h2>
+<select id="mode" aria-label="Answer mode"><option value="find">Find passages</option><option value="notice-review">Review contractual notice</option><option value="locate">Find with Codex Sol</option><option value="interpret">Interpret evidence</option><option value="draft">Check draft statements, one per line</option></select>
+<div id="question-field"><label for="question">Question</label><textarea id="question" rows="3"></textarea></div>
+<fieldset id="notice-scope" hidden>
+<legend>Contractual notice scope</legend>
+<label for="review-party">Party</label><input id="review-party" maxlength="160">
+<label for="review-route">Termination route</label><input id="review-route" maxlength="160">
+<label for="review-date">As of</label><input type="date" id="review-date">
+</fieldset>
+<button id="ask">Run</button><div id="results"></div>
+<h2>Reviewed notice rules</h2><select id="rules" aria-label="Reviewed notice rule"></select>
+<label>As of <input type="date" id="asof"></label><label>Proposed calendar days <input type="number" value="30" id="days" min="0"></label>
+<div id="conditions"></div><button id="apply">Check hypothetical notice</button><p id="notice"></p>
+<h2>Proof of service</h2>
+<p id="service-help"></p><div id="receipt-form"></div>
+<div id="saved-receipts" hidden>
+<label>Reviewed delivery record <select id="receipts"></select></label>
+<p id="receipt-description"></p>
+<label>Assessment date <input type="date" id="service-asof"></label>
+<button id="check-service">Check notice using this receipt</button>
+<details id="withdraw-panel"><summary>Withdraw an incorrect delivery record</summary>
+<label>Why is this record incorrect? <textarea id="withdraw-reason"></textarea></label>
+<button id="withdraw-receipt">Withdraw selected record</button></details>
+</div></section><p id="message" role="status"></p>
+<footer><a href="/docs">API and reviewer operations</a></footer>
+<script>
+const el=id=>document.getElementById(id);
+const mid=()=>el("matters").value;
+async function api(path,method="GET",body){
+ const r=await fetch("/v1/"+path,{method,headers:{"Authorization":"Bearer "+el("token").value,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+ const v=await r.json();if(!r.ok)throw Error(typeof v.detail==="string"?v.detail:JSON.stringify(v.detail));return v
+}
+function bind(id,fn){el(id).onclick=async()=>{el(id).disabled=true;el("message").textContent="";try{await fn()}catch(e){el("message").textContent=e.message}finally{el(id).disabled=false}}}
+function line(parent,tag,text){const n=document.createElement(tag);n.textContent=text;parent.append(n);return n}
+async function sets(selected){let rows=await api("source-sets");el("matters").replaceChildren(...rows.map(m=>new Option(m.name,m.id)));if(selected)el("matters").value=selected;el("workspace").hidden=false;await inventory()}
+let rules=[];
+let receipts=[];
+el("service-asof").value = new Date().toISOString().slice(0, 10);
+function selectedReceipt() {
+  return receipts.find(r => r.id === el("receipts").value);
+}
+function receiptDescription() {
+  const r = selectedReceipt()?.receipt;
+  el("withdraw-reason").value = "";
+  el("withdraw-panel").open = false;
+  el("receipt-description").textContent = r ? "Verified conditions: " + r.verified_conditions.join(", ") + ". Review note: " + r.review_note : "";
+}
+el("receipts").onchange = () => { receiptDescription(); el("results").replaceChildren(); };
+bind("check-service", async () => {
+  const matter = mid(), receipt = selectedReceipt();
+  if (!receipt || !el("service-asof").value) throw Error("Choose a delivery record and assessment date.");
+  const result = await api("source-sets/" + matter + "/answers", "POST", {
+    mode: "notice", question: "Does the reviewed service interval meet the notice period?",
+    as_of: el("service-asof").value, receipt_id: receipt.id
+  });
+  if (mid() === matter && selectedReceipt()?.id === receipt.id) {
+    render(result);
+    el("results").scrollIntoView();
+  }
+});
+bind("withdraw-receipt", async () => {
+  const matter = mid(), receipt = selectedReceipt(), reason = el("withdraw-reason").value.trim();
+  if (!receipt || !reason) throw Error("Choose a delivery record and explain the correction.");
+  await api("source-sets/" + matter + "/receipts/" + receipt.id + "/withdraw", "POST", {reason});
+  if (mid() === matter) {
+    await inventory();
+    el("message").textContent = "Delivery record withdrawn. Review the original proof to record corrected dates.";
+  }
+});
+
+function conditions(){let box=el("conditions");box.replaceChildren();let r=rules[el("rules").selectedIndex];if(!r)return;for(let t of r.rule.conditions){let l=line(box,"label","");let c=document.createElement("input");c.type="checkbox";c.value=t;l.append(c,document.createTextNode(" Assume "+t))}}
+el("rules").onchange=conditions;el("asof").value=new Date().toISOString().slice(0,10);
+bind("apply", async () => {
+  const matter = mid();
+  const rule = rules[el("rules").selectedIndex]?.rule;
+  if (!rule) throw Error("Choose a reviewed rule.");
+  if (!el("days").value || !el("asof").value) throw Error("Enter the date and proposed days.");
+  el("notice").textContent = "";
+  el("results").replaceChildren();
+  const result = await api("source-sets/" + matter + "/answers", "POST", {
+    mode: "notice", question: "Does this hypothetical meet the reviewed notice period?",
+    as_of: el("asof").value, scenario: {party: rule.party, route: rule.route,
+      proposed_days: Number(el("days").value),
+      assumed_conditions: [...el("conditions").querySelectorAll("input:checked")].map(c => c.value)}
+  });
+  if (mid() === matter) render(result);
+});
+let displayedDocs = [];
+let displayedMatter = "";
+let inventoryRequest = 0;
+async function inventory() {
+  const matter = mid(), generation = ++inventoryRequest;
+  displayedMatter = "";
+  displayedDocs = [];
+  rules = [];
+  receipts = [];
+  el("saved-receipts").hidden = true;
+  el("replace").checked = false;
+  for (const id of ["results", "docs", "rules", "notice", "conditions", "receipt-form", "receipts", "service-help", "receipt-description"]) el(id).replaceChildren();
+  if (!matter) return;
+  const [v, currentRules, currentReceipts] = await Promise.all([
+    api("source-sets/" + matter), api("source-sets/" + matter + "/notice-rules"),
+    api("source-sets/" + matter + "/receipts")
+  ]);
+  if (generation !== inventoryRequest || mid() !== matter) return;
+  displayedDocs = v.documents;
+  displayedMatter = matter;
+  rules = currentRules;
+  receipts = currentReceipts;
+  for (const {id, receipt: r} of receipts) {
+    el("receipts").add(new Option(r.party + " · " + r.route + " · served " + r.served_on + " · termination " + r.termination_on, id));
+  }
+  el("saved-receipts").hidden = !receipts.length;
+  el("withdraw-panel").hidden = !v.can_review;
+  el("service-help").textContent = (receipts.length ? "" : "No current reviewed delivery record. ") +
+      (v.can_review ? "To record service, choose Review proof of service beside a receipt in Documents." : "A reviewer can verify a delivery record from the original proof.");
+  receiptDescription();
+  el("rules").replaceChildren(...rules.map(r => new Option(r.rule.party + " · " + r.rule.route + " · " + r.rule.minimum_calendar_days + " days", r.id)));
+  conditions();
+  for (const d of displayedDocs) {
+    const row = line(el("docs"), "p", d.name + " · " + d.role + " · " + d.status + (d.detail ? " · " + d.detail : ""));
+    if (d.status !== "ready") continue;
+    if (v.can_review && d.role === "receipt") {
+      line(row, "button", "Review proof of service").onclick = () => receiptForm(matter, v.snapshot, d);
+    }
+    line(row, "button", "Open source").onclick = async () => {
+      try {
+        const res = await fetch("/v1/source-sets/" + matter + "/documents/" + d.id + "/original", {headers: {Authorization: "Bearer " + el("token").value}});
+        if (!res.ok) throw Error("Source unavailable");
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(await res.blob());
+        link.download = d.name;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      } catch (e) { el("message").textContent = e.message; }
+    };
+  }
+}
+function receiptForm(matter, snapshot, doc) {
+  const box = el("receipt-form");
+  box.replaceChildren();
+  const form = line(box, "form", "");
+  line(form, "h3", "Review delivery evidence · " + doc.name);
+  line(form, "p", "Check the original for the party, route, date of delivery and proposed termination date. Leave service unresolved if the evidence is insufficient.");
+  const evidenceBox = line(form, "fieldset", "");
+  line(evidenceBox, "legend", "Select the passages supporting the delivery record");
+  const more = line(form, "button", "Read more passages");
+  more.type = "button";
+  let after = -1;
+  async function loadPage() {
+    more.disabled = true;
+    try {
+      const page = await api("source-sets/" + matter + "/documents/" + doc.id + "/passages?after=" + after);
+      if (!form.isConnected || mid() !== matter) return;
+      for (const p of page.passages) {
+        const label = line(evidenceBox, "label", "");
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.value = p.id;
+        label.append(input, " " + locationLabel(p.locator));
+        line(label, "pre", p.text);
+      }
+      after = page.next_after;
+      more.hidden = after === null;
+    } catch (e) {
+      if (form.isConnected) el("message").textContent = e.message;
+    } finally {
+      more.disabled = false;
+    }
+  }
+  more.onclick = loadPage;
+  function field(label, type) {
+    const input = line(line(form, "label", label), type === "textarea" ? "textarea" : "input", "");
+    if (type !== "textarea") input.type = type;
+    input.required = true;
+    return input;
+  }
+  const party = field("Party exercising the termination right (use the rule’s party name)", "text");
+  const route = field("Notice route", "text");
+  const served = field("Date service took effect", "date");
+  const end = field("Proposed termination date", "date");
+  const conditions = field("Verified rule conditions, one per line", "textarea");
+  const note = field("How the evidence establishes service for this party and route", "textarea");
+  const submit = line(form, "button", "Save reviewed delivery record");
+  form.onsubmit = async e => {
+    e.preventDefault();
+    if (!form.isConnected || mid() !== matter || submit.disabled) return;
+    const ids = [...evidenceBox.querySelectorAll("input:checked")].map(input => input.value);
+    if (!ids.length) { el("message").textContent = "Select the passage that establishes service."; return; }
+    submit.disabled = true;
+    try {
+      const saved = await api("source-sets/" + matter + "/receipts", "POST", {
+        snapshot, party: party.value, route: route.value, served_on: served.value, termination_on: end.value,
+        verified_conditions: conditions.value.split("\n").map(s => s.trim()).filter(Boolean),
+        evidence_ids: ids, review_note: note.value
+      });
+      if (form.isConnected && mid() === matter) {
+        await inventory();
+        if (mid() !== matter) return;
+        el("receipts").value = saved.receipt_id;
+        receiptDescription();
+        el("message").textContent = "Reviewed delivery record saved.";
+      }
+    } catch (error) {
+      if (form.isConnected) el("message").textContent = error.message;
+    } finally { submit.disabled = false; }
+  };
+  loadPage();
+  box.scrollIntoView();
+}
+bind("connect",()=>sets());el("matters").onchange=()=>inventory().catch(e=>el("message").textContent=e.message);
+bind("create",async()=>{const v=await api("source-sets","POST",{name:el("name").value,allow_hosted:el("hosted").checked});await sets(v.source_set_id)});
+el("file").onchange = () => {
+  el("upload-name").value = el("file").files[0]?.name || "";
+  el("replace").checked = false;
+};
+bind("upload", async () => {
+  const matter = mid();
+  const file = el("file").files[0];
+  const name = el("upload-name").value.trim();
+  if (!file || !matter || !name) throw Error("Choose a source set, file and document name.");
+  if (file.size > 10485760) throw Error("Maximum file size is 10 MiB.");
+  const body = {name, role: el("role").value, expected_current_id: null};
+  if (el("replace").checked) {
+    const current = displayedDocs.find(d => d.name === name);
+    if (!current || displayedMatter !== matter) throw Error("Refresh the document list and select the current name.");
+    body.expected_current_id = current.id;
+  }
+  body.content_b64 = await new Promise((ok, fail) => {
+    const r = new FileReader();
+    r.onload = () => ok(r.result.split(",")[1]);
+    r.onerror = fail;
+    r.readAsDataURL(file);
+  });
+  const job = await api("source-sets/" + matter + "/documents", "POST", body);
+  if (mid() !== matter) return;
+  el("replace").checked = false;
+  await inventory();
+  for (let i = 0; i < 120 && mid() === matter; i++) {
+    const result = await api("jobs/" + job.ingestion_job_id);
+    if (!["processing","queued"].includes(result.status)) break;
+    await new Promise(r => setTimeout(r, 500));
+  }
+  if (mid() === matter) await inventory();
+});
+function cite(parent, ids, passages) {
+  if (!ids?.length) return;
+  const list = line(parent, "ul", "");
+  for (const id of new Set(ids)) {
+    const passage = passages.get(id);
+    if (!passage) continue;
+    const item = line(list, "li", "");
+    const link = line(item, "a", passage.filename + " · " + locationLabel(passage.locator));
+    link.href = "#passage-" + id;
+  }
+}
+function locationLabel(l) {
+  return l.page ? "Page " + l.page : l.line_start ? "Lines " + l.line_start + "–" + l.line_end : JSON.stringify(l);
+}
+function render(v) {
+  const box = el("results");
+  const passages = new Map(v.evidence.map(p => [p.id, p]));
+  box.replaceChildren();
+  line(box, "h3", v.status.replaceAll("_", " "));
+  const scope = v.request.notice_review;
+  if (scope && !v.statements.length && !v.proposals.length) {
+    line(box, "p", scope.party + " · " + scope.route + " · " + v.as_of);
+  }
+  for (const s of v.statements) {
+    line(box, "p", s.text);
+    cite(box, s.evidence_ids, passages);
+  }
+  if (v.status === "needs_review") {
+    for (const s of v.proposals) {
+      line(box, "p", "For review · " + s.verdict + " · " + s.text);
+      cite(box, s.evidence_ids, passages);
+    }
+  }
+  for (const gap of v.gaps) line(box, "p", gap);
+  const check = v.exception_check;
+  if (check && check.status !== "skipped_simple") {
+    line(box, "h4", "Independent exception check");
+    if (check.status === "agreed") line(box, "p", "Both readings agree on the period, cited passages and conditions.");
+    else {
+      line(box, "p", "First reading: " + check.first_days + " days (unapproved).");
+      cite(box, v.notice_review.evidence_ids, passages);
+      if (check.reader) {
+        const days = check.reader.minimum_calendar_days;
+        line(box, "p", days === null ? "Independent reading: period unresolved." : "Independent reading: " + days + " days (unapproved).");
+        cite(box, check.reader.evidence_ids, passages);
+        for (const [label, conditions] of [["First reading", v.notice_review.conditions], ["Independent reading", check.reader.conditions]]) {
+          line(box, "p", label + " conditions: " + (conditions.join(", ") || "none listed"));
+        }
+      }
+      line(box, "p", "Review the original passages before resolving this question.");
+    }
+  }
+  if (v.service) line(box, "p", v.service.gap);
+
+  const relationships = v.notice_review?.relationships || [];
+  if (relationships.length) line(box, "h4", "Candidate relationships");
+  for (const r of relationships) {
+    const group = line(box, "div", "");
+    line(group, "p", r.kind + " · " + r.parties.join(", ") + " · " + r.route + " · " + r.execution + " · " + r.verdict);
+    line(group, "p", "Effective from " + (r.effective_from || "unspecified") +
+      ", until " + (r.effective_until ? r.effective_until + " (exclusive)" : "unspecified"));
+    line(group, "small", "Changing passage and affected clause");
+    cite(group, [r.from_evidence_id, r.to_evidence_id], passages);
+    if (r.execution_evidence_ids.length) {
+      line(group, "small", "Execution evidence");
+      cite(group, r.execution_evidence_ids, passages);
+    }
+  }
+
+  if (v.status === "needs_review") {
+    const documentNotes = new Map();
+    for (const did of v.unexplained_documents || []) {
+      const sources = v.evidence.filter(p => p.document_id === did);
+      line(box, "strong", "Document missing from the explanation: " + sources[0].filename);
+      cite(box, sources.map(p => p.id), passages);
+      const noteLabel = line(box, "label", "If approving, explain why this document leaves the answer unchanged");
+      const note = document.createElement("input");
+      note.maxLength = 160;
+      noteLabel.append(note);
+      documentNotes.set(did, note);
+    }
+    const label = line(box, "label", "Reviewer decision reason");
+    const reason = document.createElement("input");
+    label.append(" ", reason);
+    for (const decision of ["approve", "reject"]) {
+      const button = line(box, "button", decision);
+      button.disabled = decision === "approve" && v.gaps.length > 0;
+      button.onclick = async () => {
+        try {
+          const notes = Object.fromEntries([...documentNotes].map(([id, input]) => [id, input.value.trim()]).filter(([, text]) => text));
+          if (decision === "approve" && Object.keys(notes).length !== documentNotes.size)
+            throw Error("Review each document missing from the explanation before approving.");
+          const result = await api("assessments/" + v.assessment_id + "/reviews", "POST", {decision, reason: reason.value, document_notes: notes});
+          if (mid() === v.source_set_id) render(result.assessment);
+        } catch (e) {
+          el("message").textContent = e.message;
+        }
+      };
+    }
+  }
+  if (v.status === "reviewed" && v.notice_review) ruleForm(box, v);
+  for (const p of v.evidence) {
+    const article = line(box, "article", "");
+    article.id = "passage-" + p.id;
+    article.tabIndex = -1;
+    line(article, "strong", p.filename);
+    line(article, "pre", p.text);
+    line(article, "small", locationLabel(p.locator));
+  }
+}
+function ruleForm(box, assessment) {
+  const finding = assessment.notice_review;
+  const form = document.createElement("form");
+  box.append(form);
+  line(form, "h3", "Approve a reusable notice rule");
+  line(form, "p", finding.party + " · " + finding.route + " · " + finding.minimum_calendar_days + " calendar days");
+  function field(text, type, required) {
+    const label = line(form, "label", text + " ");
+    const input = document.createElement(type === "textarea" ? "textarea" : "input");
+    if (type !== "textarea") input.type = type;
+    input.required = required;
+    label.append(input);
+    return input;
+  }
+  const start = field("Effective from (inclusive)", "date", true);
+  const end = field("Effective until (exclusive, leave empty only for an open-ended rule)", "date", false);
+  const conditions = field("Conditions, one per line", "textarea", true);
+  conditions.value = finding.conditions.join("\n");
+  line(form, "p", "Select passages supporting the rule, its scope and its effective dates.");
+  for (const p of assessment.evidence) {
+    const input = field(p.filename + " · " + locationLabel(p.locator), "checkbox", false);
+    input.value = p.id;
+    cite(input.parentNode, [p.id], new Map([[p.id, p]]));
+  }
+  const note = field("Basis for approving reuse", "textarea", true);
+  const save = line(form, "button", "Approve and save rule");
+  form.onsubmit = async event => {
+    event.preventDefault();
+    if (save.disabled || mid() !== assessment.source_set_id) return;
+    const ids = [...form.querySelectorAll("input:checked")].map(input => input.value);
+    if (!finding.evidence_ids.every(id => ids.includes(id))) {
+      el("message").textContent = "Select every controlling passage cited in the approved finding.";
+      return;
+    }
+    save.disabled = true;
+    try {
+      await api("source-sets/" + assessment.source_set_id + "/notice-rules", "POST", {
+        reviewed_assessment_id: assessment.assessment_id, snapshot: assessment.snapshot, party: finding.party, route: finding.route,
+        minimum_calendar_days: finding.minimum_calendar_days, effective_from: start.value,
+        effective_until: end.value || null, conditions: conditions.value.split("\n").map(s => s.trim()).filter(Boolean),
+        evidence_ids: ids, review_note: note.value.trim()
+      });
+    } catch (error) {
+      save.disabled = false;
+      el("message").textContent = error.message;
+      return;
+    }
+    if (mid() === assessment.source_set_id) {
+      el("message").textContent = "Rule saved.";
+      try { await inventory(); } catch (error) { el("message").textContent = "Rule saved. Refresh the workspace. " + error.message; }
+    }
+  };
+}
+el("mode").onchange = () => {
+  const notice = el("mode").value === "notice-review";
+  el("notice-scope").hidden = !notice;
+  el("question-field").hidden = notice;
+};
+bind("ask", async () => {
+  const mode = el("mode").value;
+  let path = "/answers";
+  let request = {question: el("question").value, mode};
+  if (mode === "notice-review") {
+    const party = el("review-party").value.trim();
+    const route = el("review-route").value.trim();
+    const asOf = el("review-date").value;
+    if (!party || !route || !asOf) throw Error("Enter the party, termination route and date.");
+    request = {
+      mode: "interpret",
+      question: "What minimum notice applies to " + party + " for " + route + " termination?",
+      notice_review: {party, route},
+      as_of: asOf,
+    };
+  } else if (mode === "draft") {
+    path = "/draft-checks";
+    request = {statements: request.question.split("\n").filter(Boolean)};
+  }
+  const matter = mid();
+  el("results").replaceChildren();
+  const result = await api("source-sets/" + matter + path, "POST", request);
+  if (mid() === matter) render(result);
+});
+</script></html>

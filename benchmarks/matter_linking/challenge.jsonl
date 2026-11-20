@@ -1,0 +1,8 @@
+{"case":"explicit denial","passages":["This instrument does not relate to MSA-407. Its operative agreement has not been supplied."],"gold":null}
+{"case":"conflicting pages","passages":["This letter supplements the Master Services Agreement of 12 March 2025 between Alder Services and North Quay Software.","Addendum to the Facilities Services Agreement signed February 18, 2026 by Lakeview Properties PLC."],"gold":null}
+{"case":"noncontract invoice","passages":["Purchase request MSA-407: buy an unrelated printer."],"gold":null}
+{"case":"unknown contract with familiar parties","passages":["Addendum to MSA-701. Its Master Services Agreement is dated 12 March 2025 between Alder Services and North Quay Software."],"gold":null}
+{"case":"unknown and known reference","passages":["Our new agreement MSA-701 replaces MSA-407. This note concerns the new contract."],"gold":null}
+{"case":"several excerpts one parent","passages":["Supplement to NDA-22.","Under NDA-22 the confidentiality period is extended."],"gold":"NDA-22"}
+{"case":"same names different dates","passages":["Master Services Agreement between Alder Services and North Quay Software signed September 16, 2025."],"gold":"MSA-4070"}
+{"case":"unclear short entity","passages":["Updates under the Supply Agreement with Fenwick Manufacturing Limited dated 5 November 2024."],"gold":null}

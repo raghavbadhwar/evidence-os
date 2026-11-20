@@ -1,0 +1,24 @@
+{"set":"development","case":"id only","text":"Side letter regarding MSA-407, clause 8. The subsidiary retains its existing period.","gold":"MSA-407"}
+{"set":"development","case":"id prefix collision","text":"Re MSA-4070, please find the revised address for service attached.","gold":"MSA-4070"}
+{"set":"development","case":"typographic dash","text":"The schedule to LIC–209 takes effect today.","gold":"LIC-209"}
+{"set":"development","case":"date names and title","text":"Addendum to the Master Services Agreement of 12 March 2025 between Alder Services Limited and North Quay Software Inc.","gold":"MSA-407"}
+{"set":"development","case":"later same title","text":"We refer to the Master Services Agreement between Alder Services and North Quay Software signed 16 September 2025.","gold":"MSA-4070"}
+{"set":"development","case":"entities only ambiguous","text":"Regarding our arrangements between Alder Services Limited and North Quay Software Inc., please confirm.","gold":null}
+{"set":"development","case":"shared parent different subsidiary","text":"This varies the Supply Agreement dated 5 November 2024 between Birch Industrial Holdings LLC and Fenwick Manufacturing Limited.","gold":"SUP-816"}
+{"set":"development","case":"informal names","text":"Under the facilities services agreement signed February 18, 2026, Oak Harbour Logistics and Lakeview Properties agree to the attached changes.","gold":"OPS-115"}
+{"set":"development","case":"multiple IDs","text":"Summary of the differences between MSA-407 and LIC-209 attached.","gold":null}
+{"set":"development","case":"unseen id","text":"Addendum to agreement ZZ-919. Scope unchanged.","gold":null}
+{"set":"development","case":"same date distinct route","text":"Alder Services Limited writes about the Software Licence Agreement signed on March 12, 2025.","gold":"LIC-209"}
+{"set":"development","case":"incidental id","text":"Example only: MSA-407 is used in our training guide. This document is not part of any contract.","gold":null}
+{"set":"holdout","case":"section number not id","text":"Section 407 sets out the permitted break dates.","gold":null}
+{"set":"holdout","case":"format variation","text":"Regarding ops‑115, all other notice requirements remain in place.","gold":"OPS-115"}
+{"set":"holdout","case":"date only","text":"The attached supplement relates to the deal signed on February 18, 2026.","gold":null}
+{"set":"holdout","case":"missing identifier but unique entities and date","text":"The parties to the arrangement of 17 July 2025 are Lakeview Properties PLC and North Quay Software Inc. This letter supplements it.","gold":"NDA-22"}
+{"set":"holdout","case":"competitive quote","text":"For comparison only, the vendor on LIC-209 charged a different amount. This is an unrelated pricing memo.","gold":null}
+{"set":"holdout","case":"truncated OCR","text":"The notice for M5A-4O7 is attached. Other identifying details are illegible.","gold":null}
+{"set":"holdout","case":"colliding title","text":"The side letter supplements the Master Services Agreement between Alder Services Limited and North Quay Software Inc. The agreement date was left blank.","gold":null}
+{"set":"holdout","case":"short party names","text":"Fenwick Manufacturing and Birch Industrial agree to an extension of the Supply Agreement dated November 5, 2024.","gold":"SUP-815"}
+{"set":"holdout","case":"title-free secondary agreement","text":"The original undertaking dated July 17, 2025 between North Quay Software and Lakeview Properties is supplemented as follows.","gold":"NDA-22"}
+{"set":"holdout","case":"adjacent unknown id","text":"This instrument relates to SUP-815A. The agreement is absent from the file.","gold":null}
+{"set":"holdout","case":"multi family title","text":"The Master Services Agreement of 12 March 2025 and the Software Licence Agreement of the same date are both covered by this settlement between Alder Services Limited and North Quay Software Inc.","gold":null}
+{"set":"holdout","case":"id only original","text":"We write in connection with NDA-22 and refer to its confidentiality undertakings.","gold":"NDA-22"}
