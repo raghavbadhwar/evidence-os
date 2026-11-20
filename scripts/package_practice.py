@@ -24,6 +24,7 @@ def build(destination, revision):
         "pyproject.toml",
         "uv.lock",
         "docs/practice-setup.md",
+        "AGENT-SETUP.md",
         "Start Evidence OS.command",
         "Start Evidence OS.cmd",
         "Doctor Evidence OS.command",

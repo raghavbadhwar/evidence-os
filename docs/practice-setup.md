@@ -2,6 +2,8 @@
 
 Use the fictional Alder contract to see how a side letter changes a lawyer’s answer. The session runs on your computer. You need a browser and internet access for the first setup. You can do the whole exercise without a Codex account.
 
+**Using Codex or Claude Code?** Open the extracted folder as an agent project and paste: “Read AGENT-SETUP.md in this folder and carry out its setup prompt for my agent.”
+
 ## Open the desk
 
 1. On GitHub, choose **Code → Download ZIP**. If someone sent you the Quickstart ZIP, use that. Extract the **whole folder** somewhere you can write, such as Downloads.

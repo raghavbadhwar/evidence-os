@@ -2,7 +2,7 @@
 
 A contract review workspace for commercial lawyers. Find the term that applies to a particular party, open the exact wording, and send a cited answer to a colleague for review.
 
-**[Download the Quickstart ZIP](https://github.com/raghavbadhwar/evidence-os/releases/download/v0.1.0-pilot.1/Evidence-OS-Quickstart.zip)** · [Setup guide](docs/practice-setup.md) · [Firm IT guide](docs/matter-desk.md#for-an-administrator) · [Release notes](https://github.com/raghavbadhwar/evidence-os/releases/tag/v0.1.0-pilot.1)
+**[Download the Quickstart ZIP](https://github.com/raghavbadhwar/evidence-os/releases/download/v0.1.0-pilot.2/Evidence-OS-Quickstart.zip)** · [Setup guide](docs/practice-setup.md) · [Firm IT guide](docs/matter-desk.md#for-an-administrator) · [Release notes](https://github.com/raghavbadhwar/evidence-os/releases/tag/v0.1.0-pilot.2)
 
 ![The fictional Alder file. The agreement requires 30 days. The amendment extends that to 45. A signed side letter preserves 30 days for Subsidiary A alone. No receipt establishes service.](docs/images/alder-notice.png)
 
@@ -13,6 +13,14 @@ A contract review workspace for commercial lawyers. Find the term that applies t
 3. **Follow the file to an answer.** Under **Your first matter**, fetch the signed side letter, open the original clauses, and submit your reading. Switch to the **Reviewer code** to check the citations and approve. Search again to see the approved answer.
 
 Allow internet access for the first setup. The exercise uses fictional files, runs locally, and needs no model account. If setup stops, open **Doctor Evidence OS** for your operating system. [Setup and repair instructions](docs/practice-setup.md#check-or-repair-the-installation)
+
+**Using Codex or Claude Code?** Open this folder in your agent and paste the following:
+
+```text
+Read AGENT-SETUP.md in this folder and carry out its setup prompt for the agent I am using. Tell me when Doctor and the project skill are verified.
+```
+
+[Read the full agent setup prompt](AGENT-SETUP.md)
 
 <details>
 <summary><strong>See the reviewed answer in the browser</strong></summary>
